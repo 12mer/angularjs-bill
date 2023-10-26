@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Bills</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
+    rel="stylesheet" 
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" 
+    crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" 
+    crossorigin="anonymous"></script>
+    <style>
+        body{background-color: black;color: skyblue;}
+        h1{text-align: center;}
+    </style>
+    <script src="angular/angular.min.js"></script>
+    <script>
+        var billpayapp = angular.module("payapp",[]);
+        billpayapp.controller("payctrl",function($scope){
+            $scope.billpay = datamodel
+            $scope.duebills = function(){
+                var counter = 0;
+                angular.forEach($scope.billpay.items, function(z){
+                    if(!z.status) {counter++}
+                });
+                return counter;
+            }
+            $scope.money = function(){
+                var s = 0, p = 0;
+                angular.forEach($scope.billpay.items, function(z){
+                    if(!z.status) {p = parseInt(z.price) * parseInt(z.num); s += parseInt(p);}
+                });
+                return s;
+            }
+            });
+            var datamodel = {
+                customer: "TTV TTV TTTTV",
+                items:[{bill:'Electricity',status:false,price:10000,num:5},
+                {bill:'Internet',status:false,price:20000,num:3},
+                {bill:'Travel',status:false,price:30000,num:2},
+                {bill:'Phone',status:true,price:40000,num:1},
+                {bill:'House Tax',status:true,price:50000,num:6},
+                {bill:'Game',status:true,price:60000,num:4},
+                {bill:'Water',status:true,price:70000,num:1},
+                {bill:'5G',status:false,price:80000,num:2},]
+            }
+    </script>
+</head>
+<body ng-app="payapp" ng-controller="payctrl">
+    <h1>JSON Bill</h1>
+
+    <div class="page-header">
+        <h2>Customer:{{billpay.customer}} </h2>
+        <h3>Bills to be Paid: 
+            <span class="label label-info" ng-hide="duebills() == 0">
+                {{duebills()}}
+            </span>
+        </h3>
+        <h3>Total: 
+            <span class="label label-info" ng-hide="money() == 0">
+                {{money() | currency:"VND ":0}}
+            </span>
+        </h3>
+    </div>
+
+    <div class="panel">
+        <div class="input-group">
+            <input class="form-control" ng-model="z.bill">
+            <span class="input-group-btn">
+                <input type="button" value="+" class="btn btn-danger">
+            </span>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Bill Name</th>
+                    <th colspan="2">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="z in billpay.items | filter:z.bill">
+                    <td> {{z.bill}} </td>
+                    <td><input type="checkbox" id="check" 
+                        ng-model="z.status"></td>
+                    <td> {{z.status}} </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
